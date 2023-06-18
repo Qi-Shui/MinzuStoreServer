@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.minzu.minzustore.mapper.TypeMapper">
+
+    <resultMap id="smallTypeResult" type="com.minzu.minzustore.entity.Type">
+        <association property="homeType" column="homeTypeId" select="com.minzu.minzustore.mapper.HomeTypeMapper.findById"></association>
+    </resultMap>
+
+    <select id="findById" parameterType="Integer" resultMap="smallTypeResult">
+        select * from type where id=#{id}
+    </select>
+
+    <select id="list" parameterType="Map" resultMap="smallTypeResult">
+        select * from type
+        <where>
+            <if test="name!=null and name!='' ">
+                and name like concat('%',#{name},'%')
+            </if>
+        </where>
+        <if test="start!=null and pageSize!=null ">
+            limit #{start},#{pageSize}
+        </if>
+    </select>
+
+    <select id="getTotal" parameterType="Map" resultType="Long">
+        select count(*) from type
+        <where>
+            <if test="name!=null and name!='' ">
+                and name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="maxId" parameterType="Integer" resultType="Int">
+        select MAX(id) from type
+    </select>
+
+</mapper>
